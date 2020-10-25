@@ -35,7 +35,7 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * Contains utility methods for calculating the memory usage of objects. It only works on the HotSpot JVM, and infers
+ * Contains utility methods for calculating the memory usage of objects. It only works on the HotSpot and OpenJ9 JVMs, and infers
  * the actual memory layout (32 bit vs. 64 bit word size, compressed object pointers vs. uncompressed) from best
  * available indicators. It can reliably detect a 32 bit vs. 64 bit JVM. It can only make an educated guess at whether
  * compressed OOPs are used, though; specifically, it knows what the JVM's default choice of OOP compression would be
