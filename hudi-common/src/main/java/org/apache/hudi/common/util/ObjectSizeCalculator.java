@@ -328,8 +328,8 @@ public class ObjectSizeCalculator {
   static MemoryLayoutSpecification getEffectiveMemoryLayoutSpecification() {
     final String vmName = System.getProperty("java.vm.name");
     if (vmName == null || !(vmName.startsWith("Java HotSpot(TM) ") || vmName.startsWith("OpenJDK")
-        || vmName.startsWith("TwitterJDK"))) {
-      throw new UnsupportedOperationException("ObjectSizeCalculator only supported on HotSpot VM");
+        || vmName.startsWith("TwitterJDK") || vmName.startsWith("Eclipse OpenJ9"))) {
+      throw new UnsupportedOperationException("ObjectSizeCalculator only supported on HotSpot VM or Eclipse OpenJ9");
     }
 
     final String dataModel = System.getProperty("sun.arch.data.model");
@@ -367,8 +367,10 @@ public class ObjectSizeCalculator {
     }
 
     final String strVmVersion = System.getProperty("java.vm.version");
-    final int vmVersion = Integer.parseInt(strVmVersion.substring(0, strVmVersion.indexOf('.')));
-    if (vmVersion >= 17) {
+    final boolean isModernJVM = strVmVersion.startsWith("openj9")
+            // vmVersion >= 17
+            || Integer.parseInt(strVmVersion.substring(0, strVmVersion.indexOf('.'))) >= 17;
+    if (isModernJVM) {
       long maxMemory = 0;
       for (MemoryPoolMXBean mp : ManagementFactory.getMemoryPoolMXBeans()) {
         maxMemory += mp.getUsage().getMax();
